@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Data in Text Box</title>
+</head>
+<body>
+
+<!-- Create a text box where you want to display the API data -->
+<textarea id="apiDataTextBox" rows="40" cols="200" readonly></textarea>
+<script>
+    // Function to fetch data from the API and update the text box
+    async function fetchData() {
+        try {
+            // Replace the URL with your API endpoint
+            const apiUrl = 'http://127.0.0.1:8000/todos/api';
+            
+            // Specify the username and password for basic authentication
+            const username = 'acer';
+            const password = 'Shams@30';
+            
+            // Create the basic authentication token by base64 encoding the username and password
+            const basicAuthToken = btoa(`${username}:${password}`);
+            
+            // Fetch data from the API with authorization headers
+            const response = await fetch(apiUrl, {
+                headers: {
+                    'Authorization': `Basic ${basicAuthToken}`
+                }
+            });
+
+            // Check if the response is successful (status code 200)
+            if (response.ok) {
+                // Get the text box element
+                const textBox = document.getElementById('apiDataTextBox');
+                
+                // Parse JSON data and display in the text box
+                const jsonData = await response.json();
+                textBox.value = JSON.stringify(jsonData, null, 2);
+            } else {
+                console.error('Error:', response.status, response.statusText);
+            }
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    }
+
+    // Call the fetchData function when the page is loaded
+    fetchData();
+</script>
+</body>
+</html>
